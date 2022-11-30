@@ -1,0 +1,38 @@
+plugins {
+    id "java"
+    id "fish.payara.micro-gradle-plugin" version "1.1.0"
+}
+
+group "fr.laboiteadodo"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: "javax.ejb", name: "ejb-api", version: "3.0"
+    implementation group: "javax.servlet", name: "javax.servlet-api", version: "3.1.0"
+    implementation group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.1.1"
+
+    providedCompile group: "javax", name: "javaee-api", version: "8.0"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.0"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+payaraMicro {
+    payaraVersion = "5.2021.6"
+    deployWar = false
+    useUberJar = true
+    daemon = false
+    commandLineOptions = [port: 2468]
+    javaCommandLineOptions = [Dtest: "test123", ea:true]
+}
+
+task server {
+    dependsOn "microBundle", "microStart"
+}
